@@ -9,6 +9,10 @@
   "host_permissions": [
     "http://localhost:8000/*"
   ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Virtual FIDO2 Authenticator"
+  },
   "background": {
     "service_worker": "background.js"
   },

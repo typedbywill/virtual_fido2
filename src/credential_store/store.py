@@ -43,3 +43,20 @@ class CredentialStore:
     def add_credential(self, cred: Dict[str, Any]) -> None:
         self.credentials[cred['credentialId']] = cred
         self.save()
+
+    def delete_credential(self, credential_id: str) -> bool:
+        if credential_id in self.credentials:
+            del self.credentials[credential_id]
+            self.save()
+            return True
+        return False
+
+    def update_credential(self, credential_id: str, updated_data: Dict[str, Any]) -> bool:
+        if credential_id in self.credentials:
+            # Update matching keys
+            self.credentials[credential_id].update(updated_data)
+            # Ensure credentialId stays consistent
+            self.credentials[credential_id]['credentialId'] = credential_id
+            self.save()
+            return True
+        return False
