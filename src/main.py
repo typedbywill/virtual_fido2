@@ -2,9 +2,9 @@ import base64
 import os
 import secrets
 from typing import List, Optional, Dict, Any
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi.responses import JSONResponse, HTMLResponse, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from cryptography.hazmat.primitives.asymmetric import ec, rsa, ed25519
@@ -24,10 +24,50 @@ async def validation_exception_handler(request, exc):
     )
 
 
-# Enable CORS for Chrome Extension context
+# Security middleware to validate Host and enforce a custom request header
+@app.middleware("http")
+async def validate_host_and_origin(request: Request, call_next):
+    # Allow CORS preflight requests to pass through without security checks
+    if request.method == "OPTIONS":
+        return await call_next(request)
+
+    # 1. Validate Host header to protect against DNS Rebinding attacks
+    host = request.headers.get("host", "")
+    allowed_hosts = {
+        "localhost:8000",
+        "127.0.0.1:8000",
+        "localhost",
+        "127.0.0.1",
+    }
+    # Check if host matches allowed patterns
+    host_ok = False
+    if host in allowed_hosts:
+        host_ok = True
+    elif host.startswith("localhost:") or host.startswith("127.0.0.1:"):
+        host_ok = True
+
+    if not host_ok:
+        return Response(content="Forbidden: Invalid Host Header", status_code=403)
+
+    # 2. Enforce custom header on API endpoints to prevent CSRF and unauthorized cross-origin requests
+    path = request.url.path
+    if path == "/status" or path.startswith("/credentials") or path.startswith("/assertion"):
+        if request.headers.get("x-requested-with") != "Virtual-FIDO2":
+            return Response(content="Forbidden: Missing or invalid security header", status_code=403)
+
+    return await call_next(request)
+
+
+# Enable CORS for local origins and Chrome Extension contexts
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Permits extension queries from any origin
+    allow_origins=[
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+        "http://localhost",
+        "http://127.0.0.1",
+    ],
+    allow_origin_regex=r"^chrome-extension://.*$",  # Allow chrome-extension requests
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

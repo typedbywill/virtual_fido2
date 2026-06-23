@@ -6,7 +6,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     fetch("http://localhost:8000/assertion", {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "X-Requested-With": "Virtual-FIDO2"
         },
         body: JSON.stringify({
             challenge: request.challenge,

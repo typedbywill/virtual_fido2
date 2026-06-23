@@ -12,7 +12,11 @@ async function checkDaemonStatus() {
     const keysCount = document.getElementById('keys-count');
 
     try {
-        const res = await fetch('http://localhost:8000/credentials');
+        const res = await fetch('http://localhost:8000/credentials', {
+            headers: {
+                'X-Requested-With': 'Virtual-FIDO2'
+            }
+        });
         if (!res.ok) {
             throw new Error();
         }
