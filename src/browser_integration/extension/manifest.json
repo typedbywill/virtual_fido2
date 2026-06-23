@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Virtual FIDO2 Passkey Authenticator",
+  "name": "Autenticador FIDO2/Passkey Virtual",
   "version": "1.0.0",
-  "description": "Overrides navigator.credentials.get to use local virtual FIDO2 authenticator.",
+  "description": "Substitui navigator.credentials.get para usar um autenticador FIDO2 virtual local.",
   "permissions": [
     "nativeMessaging"
   ],
@@ -11,7 +11,7 @@
   ],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Virtual FIDO2 Authenticator"
+    "default_title": "Autenticador FIDO2 Virtual"
   },
   "background": {
     "service_worker": "background.js"

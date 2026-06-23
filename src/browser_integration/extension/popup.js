@@ -19,13 +19,13 @@ async function checkDaemonStatus() {
         const data = await res.json();
         
         // Connected successfully
-        statusText.innerText = 'Connected';
+        statusText.innerText = 'Conectado';
         statusText.style.color = '#10b981';
         statusDot.className = 'status-dot connected';
         keysCount.innerText = data.length;
     } catch (e) {
         // Disconnected
-        statusText.innerText = 'Disconnected';
+        statusText.innerText = 'Desconectado';
         statusText.style.color = '#ef4444';
         statusDot.className = 'status-dot disconnected';
         keysCount.innerText = 'Offline';
