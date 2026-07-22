@@ -7,8 +7,15 @@
     "nativeMessaging"
   ],
   "host_permissions": [
-    "http://localhost:8000/*"
+    "http://localhost:8000/*",
+    "http://127.0.0.1:8000/*"
   ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "virtual-fido2@typedbywill.local",
+      "strict_min_version": "109.0"
+    }
+  },
   "action": {
     "default_popup": "popup.html",
     "default_title": "Autenticador FIDO2 Virtual"

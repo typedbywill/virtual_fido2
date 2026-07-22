@@ -6,6 +6,7 @@ import argparse
 # Add src directory to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from src.config import STORE_FILE
 from src.credential_store.store import CredentialStore
 
 def main():
@@ -20,7 +21,7 @@ def main():
     parser.add_argument("--no-backup-eligible", action="store_true", help="Set if credential is NOT backup eligible")
     parser.add_argument("--no-backup-state", action="store_true", help="Set if credential is NOT currently backed up")
     parser.add_argument("--not-synced", action="store_true", help="Disable synced credential mode (forces signCount increments)")
-    parser.add_argument("--store-path", default=os.path.expanduser("~/Projetos/pessoal/virtual_fido2/config.json"), help="Path to config.json store file")
+    parser.add_argument("--store-path", default=STORE_FILE, help="Path to config.json store file")
 
     args = parser.parse_args()
 

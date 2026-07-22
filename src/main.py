@@ -10,6 +10,7 @@ from pydantic import BaseModel
 from cryptography.hazmat.primitives.asymmetric import ec, rsa, ed25519
 from cryptography.hazmat.primitives.serialization import Encoding, PrivateFormat, NoEncryption
 
+from src.config import DAEMON_HOST, DAEMON_PORT, STORE_FILE
 from src.virtual_authenticator.core import VirtualAuthenticator
 
 app = FastAPI(title="Virtual FIDO2 Authenticator API")
@@ -33,7 +34,9 @@ async def validate_host_and_origin(request: Request, call_next):
 
     # 1. Validate Host header to protect against DNS Rebinding attacks
     host = request.headers.get("host", "")
+    daemon_host_port = f"{DAEMON_HOST}:{DAEMON_PORT}"
     allowed_hosts = {
+        daemon_host_port,
         "localhost:8000",
         "127.0.0.1:8000",
         "localhost",
@@ -62,6 +65,7 @@ async def validate_host_and_origin(request: Request, call_next):
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        f"http://{DAEMON_HOST}:{DAEMON_PORT}",
         "http://localhost:8000",
         "http://127.0.0.1:8000",
         "http://localhost",
@@ -73,8 +77,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Standard store file location
-STORE_FILE = os.path.expanduser("~/Projetos/pessoal/virtual_fido2/config.json")
 authenticator = VirtualAuthenticator(STORE_FILE)
 UI_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", "index.html")
 
