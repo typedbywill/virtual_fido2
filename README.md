@@ -4,19 +4,21 @@ Um autenticador FIDO2 virtual baseado em software para recuperação de chaves d
 
 ## Início rápido
 
-### Um comando (instala e abre o gerenciador)
-
-Se você ainda não clonou o repositório:
+**Um único comando** — sem clonar repositório, sem git, sem configurar nada manualmente:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/typedbywill/virtual_fido2/main/setup.sh | bash
 ```
 
-Se você já clonou o repositório:
+O script baixa o projeto para `~/.local/share/virtual-fido2`, instala as dependências, registra o comando `virtual-fido2` em `~/.local/bin` e abre o gerenciador no terminal.
+
+Para abrir o gerenciador depois:
 
 ```bash
-./virtual-fido2
+virtual-fido2
 ```
+
+> Se `virtual-fido2` não for encontrado, adicione `~/.local/bin` ao seu `PATH` ou rode o comando `curl` acima novamente.
 
 O **Gerenciador TUI** centraliza:
 
@@ -39,7 +41,15 @@ O **Gerenciador TUI** centraliza:
 
 ---
 
-## Configuração manual (alternativa)
+## Configuração manual (desenvolvedores)
+
+Se você clonou o repositório para contribuir ou desenvolver:
+
+```bash
+git clone https://github.com/typedbywill/virtual_fido2.git
+cd virtual_fido2
+./virtual-fido2
+```
 
 ### Pré-requisitos
 
@@ -100,7 +110,7 @@ Para Firefox: `about:debugging#/runtime/this-firefox` → **Carregar extensão t
 | `VIRTUAL_FIDO2_STORE` | `{projeto}/config.json` | Caminho do arquivo de credenciais |
 | `VIRTUAL_FIDO2_HOST` | `127.0.0.1` | Host do daemon |
 | `VIRTUAL_FIDO2_PORT` | `8000` | Porta do daemon |
-| `VIRTUAL_FIDO2_HOME` | `~/.local/share/virtual-fido2` | Diretório de instalação usado pelo `setup.sh` via curl |
+| `VIRTUAL_FIDO2_HOME` | `~/.local/share/virtual-fido2` | Diretório onde o instalador baixa e mantém o projeto |
 
 ---
 
