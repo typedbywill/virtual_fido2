@@ -1,9 +1,8 @@
-from src.manager.app import VirtualFido2App
+from src.manager.cli import run
 
 
 def main() -> None:
-    app = VirtualFido2App()
-    app.run()
+    run()
 
 
 if __name__ == "__main__":

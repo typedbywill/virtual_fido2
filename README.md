@@ -10,7 +10,7 @@ Um autenticador FIDO2 virtual baseado em software para recuperação de chaves d
 curl -fsSL https://raw.githubusercontent.com/typedbywill/virtual_fido2/main/setup.sh | bash
 ```
 
-O script baixa o projeto para `~/.local/share/virtual-fido2`, instala as dependências, registra o comando `virtual-fido2` em `~/.local/bin` e abre o gerenciador no terminal.
+O script baixa o projeto para `~/.local/share/virtual-fido2`, instala as dependências, registra o comando `virtual-fido2` em `~/.local/bin` e abre o **menu interativo no terminal**.
 
 Para abrir o gerenciador depois:
 
@@ -20,7 +20,7 @@ virtual-fido2
 
 > Se `virtual-fido2` não for encontrado, adicione `~/.local/bin` ao seu `PATH` ou rode o comando `curl` acima novamente.
 
-O **Gerenciador TUI** centraliza:
+O **gerenciador** centraliza:
 
 - Instalação do serviço systemd
 - Gerenciamento do daemon (status, start, stop, logs)
@@ -32,7 +32,7 @@ O **Gerenciador TUI** centraliza:
 
 ## Principais Recursos
 
-- **Gerenciador TUI interativo**: menu no terminal para configurar tudo sem memorizar comandos
+- **Menu interativo no terminal**: configure tudo digitando o número da opção
 - **Integração baseada em Interceptação**: extensão MV3 que substitui `navigator.credentials.get`
 - **Suporte a Múltiplos Algoritmos**: ES256, RS256 e EdDSA
 - **Flags em Conformidade com a Especificação**: UP, UV, BE e BS
