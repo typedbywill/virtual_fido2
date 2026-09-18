@@ -13,7 +13,7 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "virtual-fido2@typedbywill.local",
-      "strict_min_version": "109.0"
+      "strict_min_version": "128.0"
     }
   },
   "action": {
@@ -21,6 +21,7 @@
     "default_title": "Autenticador FIDO2 Virtual"
   },
   "background": {
+    "scripts": ["background.js"],
     "service_worker": "background.js"
   },
   "content_scripts": [

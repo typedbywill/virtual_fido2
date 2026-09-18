@@ -1,6 +1,17 @@
 // Listen for requests from content.js (in MAIN world)
 window.addEventListener("virtual-fido2-request", (e) => {
-    const { requestId, payload } = e.detail;
+    let data = e.detail;
+    if (typeof data === "string") {
+        try {
+            data = JSON.parse(data);
+        } catch (err) {
+            console.error("[Virtual FIDO2 Bridge] Failed to parse request:", err);
+            return;
+        }
+    }
+    if (!data) return;
+
+    const { requestId, payload } = data;
 
     // Send the message to the background service worker
     chrome.runtime.sendMessage(payload, (response) => {
@@ -15,8 +26,12 @@ window.addEventListener("virtual-fido2-request", (e) => {
             detail.response = response;
         }
 
-        // Dispatch response event back to content.js
-        const responseEvent = new CustomEvent("virtual-fido2-response", { detail });
+        // Dispatch response event back to content.js.
+        // Serializing to a JSON string avoids Firefox "Permission denied to access property"
+        // caused by cross-compartment object Xray wrappers.
+        const responseEvent = new CustomEvent("virtual-fido2-response", {
+            detail: JSON.stringify(detail)
+        });
         window.dispatchEvent(responseEvent);
     });
 });

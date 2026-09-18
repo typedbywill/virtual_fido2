@@ -61,7 +61,10 @@ def run_cmd(cmd: list, check: bool = True, capture: bool = False) -> Tuple[int, 
         if check:
             raise DaemonError(f"Command failed: {' '.join(cmd)} — {stderr}") from e
         return e.returncode, "", stderr
-
+# Add project root to sys.path if run directly
+PROJECT_ROOT_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if PROJECT_ROOT_PATH not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT_PATH)
 
 from src.config import DAEMON_HOST, DAEMON_PORT, PROJECT_ROOT
 

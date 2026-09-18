@@ -34,7 +34,8 @@ class WebAuthnAuthenticator:
         if not cred:
             raise ValueError(f"Credential not found for ID: {credential_id}")
 
-        if cred.get("rpId") != rp_id:
+        store_rp = cred.get("rpId", "")
+        if store_rp != rp_id and store_rp.removeprefix("www.") != rp_id.removeprefix("www."):
             raise ValueError(f"RP ID mismatch: credential belongs to {cred.get('rpId')}, requested {rp_id}")
 
         # 2. Reconstruct or use overridden clientDataJSON

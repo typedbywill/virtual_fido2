@@ -276,7 +276,8 @@ def get_assertion(request: AssertionRequest):
         
         # Search our store for a credential whose normalized ID matches one of the allowed bytes
         for store_id, cred_data in authenticator.store.credentials.items():
-            if cred_data.get("rpId") == request.rpId:
+            store_rp = cred_data.get("rpId", "")
+            if store_rp == request.rpId or store_rp.removeprefix("www.") == request.rpId.removeprefix("www."):
                 store_bytes = normalize_id(store_id)
                 if store_bytes in allowed_bytes:
                     target_credential_id = store_id
@@ -284,7 +285,8 @@ def get_assertion(request: AssertionRequest):
     else:
         # If allowCredentials list is empty (passwordless), find the first credential matching the RP ID
         for store_id, cred_data in authenticator.store.credentials.items():
-            if cred_data.get("rpId") == request.rpId:
+            store_rp = cred_data.get("rpId", "")
+            if store_rp == request.rpId or store_rp.removeprefix("www.") == request.rpId.removeprefix("www."):
                 target_credential_id = store_id
                 break
 

@@ -71,15 +71,25 @@ navigator.credentials.get = async function (options) {
 
         // Listen for the response from the bridge
         const responseListener = function (e) {
-            if (e.detail && e.detail.requestId === requestId) {
+            let data = e.detail;
+            if (typeof data === "string") {
+                try {
+                    data = JSON.parse(data);
+                } catch (err) {
+                    return;
+                }
+            }
+            if (!data) return;
+
+            if (data.requestId === requestId) {
                 window.removeEventListener("virtual-fido2-response", responseListener);
                 
-                if (e.detail.error) {
-                    reject(new Error(e.detail.error));
+                if (data.error) {
+                    reject(new Error(data.error));
                     return;
                 }
 
-                const res = e.detail.response;
+                const res = data.response;
                 console.log("[Virtual FIDO2] Assertion response received:", res);
 
                 // 3. Construct assertion response matching the WebAuthn API spec
@@ -103,8 +113,12 @@ navigator.credentials.get = async function (options) {
                 };
 
                 // Add standard prototype methods if checked by client application
-                Object.setPrototypeOf(assertionResult, PublicKeyCredential.prototype);
-                Object.setPrototypeOf(assertionResult.response, AuthenticatorAssertionResponse.prototype);
+                if (typeof PublicKeyCredential !== "undefined" && PublicKeyCredential.prototype) {
+                    Object.setPrototypeOf(assertionResult, PublicKeyCredential.prototype);
+                }
+                if (typeof AuthenticatorAssertionResponse !== "undefined" && AuthenticatorAssertionResponse.prototype) {
+                    Object.setPrototypeOf(assertionResult.response, AuthenticatorAssertionResponse.prototype);
+                }
 
                 resolve(assertionResult);
             }
@@ -114,10 +128,10 @@ navigator.credentials.get = async function (options) {
 
         // Dispatch request to the isolated bridge
         const event = new CustomEvent("virtual-fido2-request", {
-            detail: {
+            detail: JSON.stringify({
                 requestId,
                 payload: requestPayload
-            }
+            })
         });
         window.dispatchEvent(event);
     });
